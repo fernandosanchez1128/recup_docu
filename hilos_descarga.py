@@ -6,13 +6,11 @@ import os
 
 
 
-def worker(query,tema,year):
+def worker(query,tema,year,directorio):
     administrador = AdministradorConsultas()
     print query
-    try:
-        administrador.consulta(query,tema,year)
-    except:
-        print "descarga finalizada"
+    administrador.consulta(query,tema,year,directorio)
+
 
 temas = ['astronomy', 'medicine', 'politics', 'robotics']
 directory = "/home/master/doc_pruebas2/"
@@ -24,7 +22,7 @@ for tema in temas:
         if not os.path.exists(ruta):
             os.makedirs(ruta)
         try:
-            t = threading.Thread(target=worker, args=(query,tema,year))
+            t = threading.Thread(target=worker, args=(query,tema,year,directory))
             t.start()
         except:
             print "hilo finalizado"

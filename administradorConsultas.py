@@ -1,13 +1,13 @@
 from descarga import Descarga
 import xml.etree.ElementTree as ET
 import os
-REPOSITORY_DIR=REPOSITORY_DIR = "/home/master/doc_pruebas2/"
+
 class AdministradorConsultas:
     titulos_descargas = []
     eids_descargas = []
     lista_docs=[]
     def __init__(self):
-        
+        self.REPOSITORY_DIR = ""
         self.consultas = []
         self.lista_docs=[]
         UNIVERSIDAD_sin_cerrar_parantesis = ' ( AFFIL ( universidad  AND  del  AND  valle )  OR  AF-ID ( 60066812 ) ) '
@@ -201,7 +201,7 @@ class AdministradorConsultas:
         #~ """"
         d = Descarga(doi)
         d.buscar_por_doi()
-        titulo_eid =d.descargar(REPOSITORY_DIR+'%s.%s/'%(user,proyecto))
+        titulo_eid =d.descargar(self.REPOSITORY_DIR+'%s.%s/'%(user,proyecto))
         return titulo_eid
 
 
@@ -226,7 +226,7 @@ class AdministradorConsultas:
         for i in range(begin,iteraciones,1):
             d = Descarga(query, i*25)
             xml = d.obtener_respuesta(d.peticion)
-            d.descargar_xml(xml, REPOSITORY_DIR+'%s.%s/busqueda'%(user,proyecto)+str(i))
+            d.descargar_xml(xml, self.REPOSITORY_DIR+'%s.%s/busqueda'%(user,proyecto)+str(i))
             respuesta = d.obtener_respuesta(d.peticion)
             tree = ET.parse(respuesta)
             root = tree.getroot()
@@ -290,19 +290,19 @@ class AdministradorConsultas:
         #~ Escribe un archivo llamado docs.txt, en el directorio determinado por 'user' y 'proyecto', en el que almacena los nombres 
         #~ de los archivos pdf que se descargaron
         #~ """"
-        pdfs = open(REPOSITORY_DIR + str(user) + "." + str(proyecto) + "/" + "docs.txt", "a")
+        pdfs = open(self.REPOSITORY_DIR + str(user) + "." + str(proyecto) + "/" + "docs.txt", "a")
         for pdf in self.lista_docs:
             if pdf is not None:
                 pdfs.write(pdf.encode('UTF8') + '\n')
         pdfs.close()
 
-    def consulta(self,query, topic, year):
+    def consulta(self,query, topic, year,directorio):
         #~ #ac.escribir_resultados()
         #~ #ac.escribir_eid(500)
         #~ #ac.descargar_papers('AUTHOR-NAME(AUTHLASTNAME(aranda) AUTHFIRST(j)) AND ( AFFIL ( universidad  AND  del  AND  valle )  OR  AF-ID ( "Universidad del Valle"  60066812 ) )')
         #~ #ac.descargar_papers('Synthesis of novel thiazole-based 8,9-dihydro')
 
-
+        self.REPOSITORY_DIR = directorio
         self.descargar_papers(query, 20000, topic, year)
         #consulta = raw_input('Buscar: ')
         #print consulta
@@ -315,10 +315,10 @@ class AdministradorConsultas:
         #print "hola"
         #~ d = Descarga('10.1007/978-3-319-47154-9_11')
         #~ d.buscar_por_doi()
-        #~ titulo_eid =d.descargar(REPOSITORY_DIR+'%s.%s/'%('cesar',2))
+        #~ titulo_eid =d.descargar(self.REPOSITORY_DIR+'%s.%s/'%('cesar',2))
         #~ d = Descarga('10.1007-s10796-014-9498-1')
         #~ d.buscar_por_doi()
-        #~ titulo_eid =d.descargar(REPOSITORY_DIR+'%s.%s/'%('fernando',1))
+        #~ titulo_eid =d.descargar(self.REPOSITORY_DIR+'%s.%s/'%('fernando',1))
 
 
 
